@@ -6,8 +6,11 @@ window.minsize(width=400, height=400)
 window.config(padx=50, pady=50)
 
 turn = 'first'
-oimage = PhotoImage(file='images/sq.png')
-ximage = PhotoImage(file='images/sq.png')
+oimage = PhotoImage(file='images/o.png')
+ximage = PhotoImage(file='images/x.png')
+
+def check_win():
+    pass
 
 def press(arg):
     global turn
@@ -21,6 +24,7 @@ def press(arg):
         arg.grid()
         arg['state'] = 'disabled'
         turn = 'first'
+    check_win()
 
 right_image = PhotoImage(file='images/sq.png', width=100, height=100)
 button1 = Button(image=right_image, highlightthickness=0, command=lambda: press(button1))
