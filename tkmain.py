@@ -6,8 +6,8 @@ window.minsize(width=400, height=400)
 window.config(padx=50, pady=50)
 
 turn = 'first'
-ximage = PhotoImage(file='images/x.png')
-oimage = PhotoImage(file='images/o.png')
+oimage = PhotoImage(file='images/sq.png')
+ximage = PhotoImage(file='images/sq.png')
 
 def press(arg):
     global turn
