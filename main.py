@@ -34,10 +34,9 @@ buttons = []
 # player_moves to compare later with the win_moves 
 f_moves = []
 s_moves = []
-corners = [1,3,7,9]
 
-def det_probab():
-    pass
+# button objects at the corners
+corners = []
 
 def check_win(player):
     global times
@@ -65,59 +64,89 @@ def check_win(player):
                 for button in buttons:
                     button['state'] = 'disabled'
 
+def check_win_comb():
+    for win in sets:
+        if len(win.intersection(set(s_moves))) > 1:
+            third_sq = int(str(win-set(s_moves))[1])
+            button = buttons[third_sq-1]
+            if button not in activated_squares:
+                button.config(image=oimage, width=100, height=100)
+                button.grid()
+                s_moves.append(int(button._name))
+                button['state'] = 'disabled'
+
 def comp_move():
-    pass
-
-def press(arg):
-    global turn
-    if turn == 'first':
-        # create two lists of moves of players, so i could check the intersection
-        f_moves.append(int(arg._name))
-        # change the image and put it to its coordinates
-        arg.config(image=ximage, width=100, height=100)
-        arg.grid()
-        # change the state of the button, so it won't be pressed
-        arg['state'] = 'disabled'
-        # check for active buttons
-        activated_squares.append(arg)
-        # pass the turn to other player
-        turn = 'second'
-        # change the label. for easier play
-        label.config(text="Second's turn.")
-        if int(arg._name) in corners:
-            corners.remove(int(arg._name))
-        check_win('first')
-    elif turn == 'second':
-        ###### comp_move()
-        # create two lists of moves of players, so i could check the intersection
-        s_moves.append(int(arg._name))
-        # change the image and put it to its coordinates
-        arg.config(image=oimage, width=100, height=100)
-        arg.grid()
-        # change the state of the button, so it won't be pressed
-        arg['state'] = 'disabled'
-        # pass the turn to other player
-        turn = 'first'
-        activated_squares.append(arg)
-        # change the label. for easier play
-        label.config(text="First again.")
-        # if int(arg._name) in corners:
-        #     corners.remove(int(arg._name))
-        check_win('second')
+    # if len(corners) > 0:
+    if len(s_moves) >= 2:
+        check_win_comb()
+    else:
+        try:
+            corners[0].config(image=oimage, width=100, height=100)
+            corners[0].grid()
+            s_moves.append(int(corners[0]._name))
+            activated_squares.append(corners[0])
+            corners[0]['state'] = 'disabled'
+            corners.remove(corners[0])
+        except:
+            print('no corners')
+        finally:
+            print(f_moves, s_moves)
+            print(buttons)
 
 
+def press(button):
+    # global turn
+    # if turn == 'first':
+    # create two lists of moves of players, so i could check the intersection
+    f_moves.append(int(button._name))
+    # change the image and put it to its coordinates
+    button.config(image=ximage, width=100, height=100)
+    button.grid()
+    # change the state of the button, so it won't be pressed
+    button['state'] = 'disabled'
+    # check for active buttons
+    activated_squares.append(button)
+    # pass the turn to other player
+    # turn = 'second'
+    # change the label. for easier play
+    # label.config(text="Second's turn.")
+    if button in corners:
+        corners.remove(button)
+    check_win('first')
+
+    # elif turn == 'second':
+    comp_move()
+    check_win('second')
+    #     # create two lists of moves of players, so i could check the intersection
+    #     # change the image and put it to its coordinates
+    #     arg.config(image=oimage, width=100, height=100)
+    #     arg.grid()
+    #     # change the state of the button, so it won't be pressed
+    #     arg['state'] = 'disabled'
+    #     # pass the turn to other player
+    #     turn = 'first'
+    #     activated_squares.append(arg)
+    #     # change the label. for easier play
+    #     label.config(text="First again.")
+    #     # if int(arg._name) in corners:
+    #     #     corners.remove(int(arg._name))
+
+
+# defining all buttons and getting them functioning
 label = Label(text='First to go!', font=('Arial', 15))
 label.grid(column=0, row=3, columnspan=3)
 right_image = PhotoImage(file='images/sq.png', width=100, height=100)
 button1 = Button(name='1',image=right_image, highlightthickness=0, command=lambda: press(button1))
 button1.grid(column=0, row=0)
 buttons.append(button1)
+corners.append(button1)
 button2 = Button(name='2',image=right_image, highlightthickness=0, command=lambda: press(button2))
 button2.grid(column=0, row=1)
 buttons.append(button2)
 button3 = Button(name='3',image=right_image, highlightthickness=0, command=lambda: press(button3))
 button3.grid(column=0, row=2)
 buttons.append(button3)
+corners.append(button3)
 button4 = Button(name='4',image=right_image, highlightthickness=0, command=lambda: press(button4))
 button4.grid(column=1, row=0)
 buttons.append(button4)
@@ -130,11 +159,14 @@ buttons.append(button6)
 button7 = Button(name='7',image=right_image, highlightthickness=0, command=lambda: press(button7))
 button7.grid(column=2, row=0)
 buttons.append(button7)
+corners.append(button7)
 button8 = Button(name='8',image=right_image, highlightthickness=0, command=lambda: press(button8))
 button8.grid(column=2, row=1)
 buttons.append(button8)
 button9 = Button(name='9',image=right_image, highlightthickness=0, command=lambda: press(button9))
 button9.grid(column=2, row=2)
 buttons.append(button9)
+corners.append(button9)
+
 
 window.mainloop()
