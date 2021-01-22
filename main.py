@@ -75,28 +75,33 @@ def check_win_comb():
                 s_moves.append(int(button._name))
                 button['state'] = 'disabled'
 
+def comp_block_move():
+    for win in sets:
+        if len(win.intersection(f_moves)) >= 2:
+            third_sq = int(str(win - set(f_moves))[1])
+            button = buttons[third_sq-1]
+            button.config(image=oimage, width=100, height=100)
+            button.grid()
+            s_moves.append(int(button._name))
+            button['state'] = 'disabled'
+            return True
+
 def comp_move():
     # if len(corners) > 0:
-    if len(s_moves) >= 2:
+    if len(f_moves) >= 2:
+        comp_block_move()
+    elif len(s_moves) >= 2 and comp_block_move():
         check_win_comb()
     else:
-        try:
-            corners[0].config(image=oimage, width=100, height=100)
-            corners[0].grid()
-            s_moves.append(int(corners[0]._name))
-            activated_squares.append(corners[0])
-            corners[0]['state'] = 'disabled'
-            corners.remove(corners[0])
-        except:
-            print('no corners')
-        finally:
-            print(f_moves, s_moves)
-            print(buttons)
+        corners[0].config(image=oimage, width=100, height=100)
+        corners[0].grid()
+        s_moves.append(int(corners[0]._name))
+        activated_squares.append(corners[0])
+        corners[0]['state'] = 'disabled'
+        corners.remove(corners[0])
 
 
 def press(button):
-    # global turn
-    # if turn == 'first':
     # create two lists of moves of players, so i could check the intersection
     f_moves.append(int(button._name))
     # change the image and put it to its coordinates
@@ -106,30 +111,12 @@ def press(button):
     button['state'] = 'disabled'
     # check for active buttons
     activated_squares.append(button)
-    # pass the turn to other player
-    # turn = 'second'
-    # change the label. for easier play
-    # label.config(text="Second's turn.")
     if button in corners:
         corners.remove(button)
     check_win('first')
 
-    # elif turn == 'second':
     comp_move()
     check_win('second')
-    #     # create two lists of moves of players, so i could check the intersection
-    #     # change the image and put it to its coordinates
-    #     arg.config(image=oimage, width=100, height=100)
-    #     arg.grid()
-    #     # change the state of the button, so it won't be pressed
-    #     arg['state'] = 'disabled'
-    #     # pass the turn to other player
-    #     turn = 'first'
-    #     activated_squares.append(arg)
-    #     # change the label. for easier play
-    #     label.config(text="First again.")
-    #     # if int(arg._name) in corners:
-    #     #     corners.remove(int(arg._name))
 
 
 # defining all buttons and getting them functioning
