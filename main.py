@@ -74,25 +74,26 @@ def check_win_comb():
                 button.grid()
                 s_moves.append(int(button._name))
                 button['state'] = 'disabled'
+                return False
+    return True
 
-def comp_block_move():
-    for win in sets:
-        if len(win.intersection(f_moves)) >= 2:
-            third_sq = int(str(win - set(f_moves))[1])
-            button = buttons[third_sq-1]
-            button.config(image=oimage, width=100, height=100)
-            button.grid()
-            s_moves.append(int(button._name))
-            button['state'] = 'disabled'
-            return True
+def comp_block_move(bl):
+    if bl:
+        for win in sets:
+            if len(win.intersection(f_moves)) >= 2:
+                third_sq = int(str(win - set(f_moves))[1])
+                button = buttons[third_sq-1]
+                if button not in activated_squares:
+                    button.config(image=oimage, width=100, height=100)
+                    button.grid()
+                    s_moves.append(int(button._name))
+                    activated_squares.append(button)
+                    button['state'] = 'disabled'
+                    return False
+        return True
 
 def comp_move():
-    # if len(corners) > 0:
-    if len(f_moves) >= 2:
-        comp_block_move()
-    elif len(s_moves) >= 2 and comp_block_move():
-        check_win_comb()
-    else:
+    if comp_block_move(check_win_comb()):
         corners[0].config(image=oimage, width=100, height=100)
         corners[0].grid()
         s_moves.append(int(corners[0]._name))
